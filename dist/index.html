@@ -1,0 +1,340 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f1f0e9">
+  <meta name="description" content="늘 보던 하루에서 새로운 장면을 발견하는 60초 관찰 실험실.">
+  <title>오늘의 우연 연구실 — 작은 것을 새롭게 보기</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --paper: #f1f0e9;
+      --ink: #22231f;
+      --muted: #73746d;
+      --line: rgba(34, 35, 31, .16);
+      --plum: #292434;
+      --lime: #d6f36a;
+      --lilac: #c7b8f6;
+      --orange: #f4a568;
+      --serif: Georgia, "Times New Roman", serif;
+      font-family: Inter, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body { margin: 0; background: var(--paper); color: var(--ink); }
+    button, a { font: inherit; }
+    a { color: inherit; text-decoration: none; }
+    button:focus-visible, a:focus-visible { outline: 3px solid #7d61cf; outline-offset: 4px; }
+    .wrap { width: min(1120px, calc(100% - 48px)); margin-inline: auto; }
+    .topbar { height: 78px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--line); }
+    .brand { display: inline-flex; align-items: center; gap: 11px; font-size: 14px; font-weight: 750; letter-spacing: -.04em; }
+    .brand-mark { width: 31px; height: 31px; position: relative; display: inline-grid; place-items: center; border: 1px solid var(--ink); border-radius: 50%; transform: rotate(-28deg); }
+    .brand-mark::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--ink); }
+    .brand-mark::after { content: ""; position: absolute; width: 39px; height: 15px; border: 1px solid var(--ink); border-radius: 50%; transform: rotate(45deg); }
+    .nav { display: flex; align-items: center; gap: 31px; color: #66675f; font-size: 12px; }
+    .nav a:hover { color: var(--ink); }
+    .nav .nav-cta { padding: 11px 16px; border: 1px solid var(--line); border-radius: 999px; color: var(--ink); transition: background .2s, color .2s; }
+    .nav .nav-cta:hover { background: var(--ink); color: var(--paper); }
+
+    .hero { min-height: 565px; display: grid; grid-template-columns: 1fr .88fr; align-items: center; gap: 70px; padding-block: 76px 82px; }
+    .eyebrow { display: flex; align-items: center; gap: 9px; color: var(--muted); font-size: 10px; letter-spacing: .15em; text-transform: uppercase; }
+    .live-dot { width: 7px; height: 7px; border-radius: 50%; background: #89a72e; box-shadow: 0 0 0 4px rgba(137,167,46,.13); }
+    h1 { max-width: 620px; margin: 23px 0 22px; font-size: clamp(48px, 6.2vw, 78px); line-height: 1.06; letter-spacing: -.085em; font-weight: 650; }
+    h1 em { color: #7c62bc; font-family: var(--serif); font-weight: 400; letter-spacing: -.07em; }
+    .hero-copy { max-width: 390px; margin: 0; color: #65665e; font-size: 14px; line-height: 1.9; }
+    .hero-meta { display: flex; gap: 9px; margin-top: 31px; }
+    .meta-pill { padding: 9px 12px; border: 1px solid var(--line); border-radius: 999px; color: #5e5f58; font-size: 10px; }
+
+    .orbital-stage { height: 368px; position: relative; display: grid; place-items: center; overflow: hidden; }
+    .orbital-stage::before, .orbital-stage::after { content: ""; position: absolute; border: 1px solid rgba(34,35,31,.18); border-radius: 50%; }
+    .orbital-stage::before { width: 282px; height: 282px; }
+    .orbital-stage::after { width: 365px; height: 170px; transform: rotate(-33deg); }
+    .orb-core { position: relative; z-index: 1; width: 174px; height: 174px; border-radius: 49% 51% 60% 40% / 49% 43% 57% 51%; background: radial-gradient(circle at 32% 27%, #f8dc8c 0 8%, transparent 9%), linear-gradient(140deg, #eabc77 4%, #d39be4 48%, #98bfa7 100%); box-shadow: inset -18px -17px 30px rgba(48,39,65,.17), 0 27px 55px rgba(63,48,82,.14); animation: float 7s ease-in-out infinite; }
+    .orb-core::before { content: ""; position: absolute; inset: 15px 23px 18px 18px; border-radius: 50%; border: 1px solid rgba(255,255,255,.58); transform: rotate(-22deg); }
+    .orbit-dot { position: absolute; z-index: 2; width: 13px; height: 13px; border-radius: 50%; background: var(--plum); top: 73px; right: 102px; box-shadow: 0 0 0 7px rgba(41,36,52,.08); }
+    .orbit-spark { position: absolute; top: 68px; left: 91px; font-family: var(--serif); font-size: 31px; color: #9883cd; }
+    .stage-note { position: absolute; right: 3px; bottom: 35px; width: 138px; padding: 13px; border: 1px solid var(--line); background: rgba(241,240,233,.8); transform: rotate(5deg); }
+    .stage-note small { display: block; color: var(--muted); font-size: 8px; letter-spacing: .1em; }
+    .stage-note strong { display: block; margin-top: 7px; font-family: var(--serif); font-weight: 400; font-size: 16px; }
+    @keyframes float { 0%,100% { transform: translateY(0) rotate(-5deg); } 50% { transform: translateY(-11px) rotate(3deg); } }
+
+    .experiment-section { padding-block: 15px 106px; scroll-margin-top: 30px; }
+    .experiment-card { min-height: 356px; display: grid; grid-template-columns: .83fr 1.17fr; overflow: hidden; border-radius: 8px; background: var(--plum); color: #f8f6ef; }
+    .experiment-aside { position: relative; min-height: 356px; padding: 37px 38px; overflow: hidden; background: #383047; }
+    .experiment-aside::before, .experiment-aside::after { content: ""; position: absolute; border: 1px solid rgba(214,243,106,.18); border-radius: 50%; }
+    .experiment-aside::before { width: 290px; height: 290px; right: -74px; bottom: -156px; }
+    .experiment-aside::after { width: 202px; height: 202px; right: -28px; bottom: -112px; }
+    .aside-index { color: var(--lime); font-size: 10px; letter-spacing: .16em; }
+    .experiment-aside h2 { max-width: 250px; margin: 27px 0 12px; font-size: 34px; line-height: 1.18; letter-spacing: -.06em; font-weight: 550; }
+    .experiment-aside p { max-width: 265px; color: #c3bdcc; font-size: 12px; line-height: 1.8; }
+    .aside-stamp { position: absolute; bottom: 31px; left: 38px; display: flex; align-items: center; gap: 8px; color: #c3bdcc; font-size: 9px; letter-spacing: .08em; }
+    .aside-stamp span { display: inline-grid; width: 22px; height: 22px; place-items: center; border: 1px solid rgba(214,243,106,.55); border-radius: 50%; color: var(--lime); }
+    .experiment-content { display: flex; flex-direction: column; justify-content: center; padding: 38px clamp(28px, 5vw, 66px); }
+    .output-top { display: flex; align-items: center; justify-content: space-between; color: #c4becb; font-size: 9px; letter-spacing: .11em; }
+    .output-number { color: var(--lime); }
+    .empty-state { padding-block: 30px 24px; }
+    .empty-state .little-star { color: var(--orange); font-family: var(--serif); font-size: 31px; }
+    .empty-state h3 { margin: 8px 0; font-size: clamp(20px, 2.5vw, 28px); font-weight: 500; letter-spacing: -.04em; }
+    .empty-state p { margin: 0; color: #bcb6c3; font-size: 12px; line-height: 1.8; }
+    .mission { min-height: 148px; padding-block: 28px 22px; }
+    .mission-label { display: inline-block; margin-bottom: 12px; color: var(--lime); font-size: 9px; letter-spacing: .14em; }
+    .mission h3 { margin: 0 0 9px; font-size: clamp(21px, 2.5vw, 29px); line-height: 1.22; font-weight: 520; letter-spacing: -.05em; }
+    .mission p { max-width: 450px; margin: 0; color: #c5bfcb; font-size: 12px; line-height: 1.8; }
+    .mission[hidden], .empty-state[hidden] { display: none; }
+    .card-actions { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-top: 7px; }
+    .button-primary, .button-quiet { min-height: 44px; display: inline-flex; align-items: center; justify-content: center; gap: 10px; border: 0; border-radius: 999px; padding: 0 18px; cursor: pointer; font-size: 11px; transition: transform .2s, background .2s; }
+    .button-primary { background: var(--lime); color: #25252a; font-weight: 700; }
+    .button-primary:hover { background: #e4ff87; transform: translateY(-2px); }
+    .button-quiet { background: rgba(255,255,255,.09); color: #f6f3ed; }
+    .button-quiet:hover { background: rgba(255,255,255,.16); }
+    .button-primary:disabled, .button-quiet:disabled { cursor: default; opacity: .7; }
+    .button-arrow { font-size: 16px; line-height: 0; }
+    .session-count { margin-left: auto; color: #aaa4b3; font-size: 10px; }
+    .progress-line { height: 2px; margin-top: 22px; overflow: hidden; background: rgba(255,255,255,.14); }
+    .progress-line span { display: block; width: 0; height: 100%; background: var(--lime); transition: width .55s cubic-bezier(.2,.7,.2,1); }
+    .progress-line span.active { width: 100%; }
+
+    .method { display: grid; grid-template-columns: .72fr 1.28fr; gap: 55px; padding-bottom: 105px; }
+    .section-kicker { color: #797970; font-size: 9px; letter-spacing: .16em; }
+    .method h2, .notes h2 { margin: 14px 0 0; font-size: clamp(28px, 4vw, 43px); line-height: 1.13; letter-spacing: -.065em; font-weight: 550; }
+    .method-intro { max-width: 260px; color: #71726a; font-size: 12px; line-height: 1.8; }
+    .steps { display: grid; grid-template-columns: repeat(3, 1fr); align-content: end; gap: 14px; }
+    .step { padding-top: 18px; border-top: 1px solid var(--line); }
+    .step-num { color: #8670c2; font-family: var(--serif); font-size: 18px; }
+    .step h3 { margin: 19px 0 8px; font-size: 14px; font-weight: 650; letter-spacing: -.03em; }
+    .step p { max-width: 170px; margin: 0; color: #73746d; font-size: 11px; line-height: 1.8; }
+
+    .notes { padding: 39px 0 83px; border-top: 1px solid var(--line); scroll-margin-top: 30px; }
+    .notes-head { display: flex; align-items: end; justify-content: space-between; margin-bottom: 28px; }
+    .notes h2 { font-size: clamp(27px, 3.6vw, 38px); }
+    .notes-head > p { max-width: 230px; margin: 0 0 3px; color: #73746d; font-size: 10px; line-height: 1.7; text-align: right; }
+    .note-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; }
+    .note-card { min-height: 194px; display: flex; flex-direction: column; justify-content: space-between; padding: 19px; border: 1px solid var(--line); background: rgba(255,255,255,.23); transition: transform .25s, background .25s; }
+    .note-card:hover { transform: translateY(-4px); background: rgba(255,255,255,.56); }
+    .note-top { display: flex; justify-content: space-between; color: #77786e; font-size: 9px; }
+    .note-color { width: 22px; height: 22px; border-radius: 50%; background: var(--lilac); }
+    .note-card:nth-child(2) .note-color { background: var(--orange); }
+    .note-card:nth-child(3) .note-color { background: #a9c0aa; }
+    .note-quote { max-width: 280px; margin: 23px 0 19px; font-family: var(--serif); font-size: 22px; line-height: 1.23; letter-spacing: -.03em; }
+    .note-foot { display: flex; align-items: center; justify-content: space-between; color: #77786e; font-size: 9px; }
+    .sample-badge { padding: 5px 8px; border: 1px solid var(--line); border-radius: 99px; font-size: 8px; }
+    footer { min-height: 76px; display: flex; align-items: center; justify-content: space-between; border-top: 1px solid var(--line); color: #77786e; font-size: 9px; }
+    footer .foot-mark { color: var(--ink); font-weight: 750; letter-spacing: -.04em; }
+    .toast { position: fixed; z-index: 10; left: 50%; bottom: 22px; transform: translate(-50%, 20px); padding: 11px 16px; border-radius: 999px; background: var(--ink); color: white; font-size: 11px; opacity: 0; pointer-events: none; transition: .25s; }
+    .toast.show { opacity: 1; transform: translate(-50%, 0); }
+
+    @media (max-width: 760px) {
+      .wrap { width: min(100% - 34px, 560px); }
+      .topbar { height: 68px; }
+      .nav { gap: 14px; }
+      .nav a:not(.nav-cta) { display: none; }
+      .nav .nav-cta { padding: 9px 12px; }
+      .hero { min-height: auto; grid-template-columns: 1fr; gap: 8px; padding-block: 64px 34px; }
+      h1 { font-size: clamp(49px, 13vw, 72px); }
+      .hero-copy { max-width: 440px; }
+      .orbital-stage { height: 302px; margin-top: 5px; }
+      .orbital-stage::before { width: 238px; height: 238px; }
+      .orbital-stage::after { width: 302px; height: 142px; }
+      .orb-core { width: 145px; height: 145px; }
+      .orbit-dot { top: 53px; right: calc(50% - 126px); }
+      .orbit-spark { top: 43px; left: calc(50% - 124px); }
+      .stage-note { right: 2px; bottom: 10px; }
+      .experiment-section { padding-bottom: 78px; }
+      .experiment-card { grid-template-columns: 1fr; }
+      .experiment-aside { min-height: 235px; padding: 27px; }
+      .experiment-aside h2 { margin-top: 19px; font-size: 29px; }
+      .experiment-aside p { max-width: 300px; margin-bottom: 0; }
+      .aside-stamp { bottom: 22px; left: auto; right: 24px; }
+      .experiment-content { min-height: 300px; padding: 28px 25px; }
+      .method { grid-template-columns: 1fr; gap: 28px; padding-bottom: 78px; }
+      .method-intro { max-width: 400px; }
+      .step p { font-size: 10px; }
+      .notes { padding-block: 32px 63px; }
+    }
+    @media (max-width: 480px) {
+      .hero-meta { flex-wrap: wrap; }
+      .steps { gap: 10px; }
+      .step h3 { font-size: 12px; }
+      .step p { font-size: 9px; }
+      .notes-head { display: block; }
+      .notes-head > p { margin-top: 13px; text-align: left; }
+      .note-grid { grid-template-columns: 1fr; }
+      .note-card { min-height: 170px; }
+      .session-count { width: 100%; margin-left: 0; }
+      footer { align-items: flex-start; justify-content: center; flex-direction: column; gap: 7px; padding-block: 18px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+    }
+  </style>
+</head>
+<body>
+  <header class="wrap topbar">
+    <a class="brand" href="#top" aria-label="오늘의 우연 연구실 홈"><span class="brand-mark" aria-hidden="true"></span>오늘의 우연 연구실</a>
+    <nav class="nav" aria-label="주요 메뉴">
+      <a href="#experiment">실험하기</a>
+      <a href="#notes">관찰 노트</a>
+      <a class="nav-cta" href="#experiment">60초 시작 <span aria-hidden="true">↗</span></a>
+    </nav>
+  </header>
+
+  <main id="top">
+    <section class="wrap hero" aria-labelledby="hero-title">
+      <div>
+        <div class="eyebrow"><span class="live-dot" aria-hidden="true"></span> 하루에 한 번, 시선을 바꾸는 곳</div>
+        <h1 id="hero-title">익숙한 하루에서<br><em>우연을 발견해요.</em></h1>
+        <p class="hero-copy">대단한 일이 아니어도 괜찮아요. 60초 동안 주변을 천천히 바라보면, 늘 있던 풍경에도 처음 보는 장면이 숨어 있어요.</p>
+        <div class="hero-meta" aria-label="실험 소개"><span class="meta-pill">준비물 없이</span><span class="meta-pill">딱 60초</span><span class="meta-pill">혼자서도 가볍게</span></div>
+      </div>
+      <div class="orbital-stage" aria-label="서로 다른 관찰의 궤도를 나타내는 색채 그래픽" role="img">
+        <span class="orbit-spark" aria-hidden="true">✳</span><span class="orb-core" aria-hidden="true"></span><span class="orbit-dot" aria-hidden="true"></span>
+        <div class="stage-note"><small>FIELD NOTE · 001</small><strong>아무것도 아닌<br>것의 발견</strong></div>
+      </div>
+    </section>
+
+    <section class="wrap experiment-section" id="experiment" aria-labelledby="experiment-heading">
+      <div class="experiment-card">
+        <div class="experiment-aside">
+          <div class="aside-index">OPEN LAB / 01</div>
+          <h2 id="experiment-heading">오늘의 시선을<br>하나 골라볼까요?</h2>
+          <p>생각보다 가까운 곳에 답이 있어요. 미션을 뽑고, 지금 있는 자리에서 가볍게 시작해 보세요.</p>
+          <div class="aside-stamp"><span aria-hidden="true">✳</span> 오늘도 관찰 중</div>
+        </div>
+        <div class="experiment-content" aria-live="polite">
+          <div class="output-top"><span>60-SECOND EXPERIMENT</span><span class="output-number" id="output-number">READY · 12 IDEAS</span></div>
+          <div class="empty-state" id="empty-state"><span class="little-star" aria-hidden="true">✳</span><h3>작은 발견을 시작해요.</h3><p>버튼을 누르면 지금 주변에서 해볼 수 있는 관찰 미션이 열립니다.</p></div>
+          <div class="mission" id="mission" hidden>
+            <span class="mission-label" id="mission-category"></span>
+            <h3 id="mission-title"></h3>
+            <p id="mission-copy"></p>
+          </div>
+          <div class="card-actions">
+            <button class="button-primary" id="draw-button" type="button">실험 하나 뽑기 <span class="button-arrow" aria-hidden="true">↗</span></button>
+            <button class="button-quiet" id="done-button" type="button" hidden>관찰했어요 ✓</button>
+            <button class="button-quiet" id="copy-button" type="button" hidden>미션 복사</button>
+            <span class="session-count" id="session-count">아직 첫 실험 전이에요</span>
+          </div>
+          <div class="progress-line" aria-hidden="true"><span id="progress"></span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="wrap method" aria-labelledby="method-heading">
+      <div>
+        <div class="section-kicker">HOW TO OBSERVE</div>
+        <h2 id="method-heading">발견은<br>작은 순서로.</h2>
+        <p class="method-intro">정답도, 결과물도 필요 없어요. 잠깐 멈춰 바라보는 것부터 이미 실험은 시작됐습니다.</p>
+      </div>
+      <div class="steps">
+        <article class="step"><span class="step-num">01</span><h3>미션을 뽑고</h3><p>지금 있는 자리에서 바로 할 수 있는 관찰을 골라요.</p></article>
+        <article class="step"><span class="step-num">02</span><h3>잠깐 바라보고</h3><p>익숙한 사물이나 소리 하나에 60초를 건네요.</p></article>
+        <article class="step"><span class="step-num">03</span><h3>나만의 발견</h3><p>무엇이 달라 보였는지 마음속에 한 문장 남겨요.</p></article>
+      </div>
+    </section>
+
+    <section class="notes" id="notes" aria-labelledby="notes-heading">
+      <div class="wrap">
+        <div class="notes-head">
+          <div><div class="section-kicker">OBSERVATION NOTES</div><h2 id="notes-heading">상상의 관찰 노트</h2></div>
+          <p>아래는 미션의 분위기를 보여주는 샘플 기록이에요.<br>당신의 발견은 조금 다른 모양일 거예요.</p>
+        </div>
+        <div class="note-grid">
+          <article class="note-card"><div class="note-top"><span>샘플 기록 · 01</span><span class="note-color" aria-hidden="true"></span></div><p class="note-quote">“햇빛이 책상 위에서<br>천천히 자라고 있었다.”</p><div class="note-foot"><span>빛의 모양</span><span class="sample-badge">상상 기록</span></div></article>
+          <article class="note-card"><div class="note-top"><span>샘플 기록 · 02</span><span class="note-color" aria-hidden="true"></span></div><p class="note-quote">“컵 가장자리에도<br>저녁이 걸려 있었다.”</p><div class="note-foot"><span>그림자의 두 번째 형태</span><span class="sample-badge">상상 기록</span></div></article>
+          <article class="note-card"><div class="note-top"><span>샘플 기록 · 03</span><span class="note-color" aria-hidden="true"></span></div><p class="note-quote">“조용한 방에도<br>작은 리듬이 흐른다.”</p><div class="note-foot"><span>가장 가까운 소리</span><span class="sample-badge">상상 기록</span></div></article>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="wrap"><span class="foot-mark">오늘의 우연 연구실</span><span>별것 아닌 하루를, 조금 다르게 바라보는 연습. © 2026</span></footer>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script>
+    (() => {
+      const experiments = [
+        { category: "모양을 보는 실험 · 60초", title: "그림자의 두 번째 형태", copy: "가까운 그림자 하나를 골라보세요. 사물의 모양 말고, 그림자가 무엇을 닮았는지 천천히 상상해 봅니다." },
+        { category: "색을 보는 실험 · 60초", title: "오늘의 가장 작은 파랑", copy: "주변에서 파란색을 하나만 찾아보세요. 색의 이름 대신, 그 색이 어떤 기분인지 마음속에 붙여봅니다." },
+        { category: "소리를 듣는 실험 · 60초", title: "가장 가까운 소리", copy: "눈을 감고 가장 가까운 소리 하나를 따라가요. 그 소리가 조금씩 달라지는 순간을 발견해 봅니다." },
+        { category: "천천히 보기 · 60초", title: "익숙한 물건의 낯선 면", copy: "매일 쓰는 물건을 하나 뒤집거나 옆에서 바라보세요. 처음 보는 선이나 흠집을 찾아봅니다." },
+        { category: "빛을 보는 실험 · 60초", title: "빛이 머무는 자리", copy: "빛이 닿아 있는 곳을 한 군데 골라요. 빛의 끝이 어디서 멈추는지 눈으로 천천히 따라갑니다." },
+        { category: "질감을 느끼는 실험 · 60초", title: "손끝으로 만나는 표면", copy: "안전한 표면을 손끝으로 살짝 만져보세요. 매끈함, 거침, 온도 중 무엇이 먼저 느껴지는지 알아차립니다." },
+        { category: "모양을 보는 실험 · 60초", title: "구름 아닌 구름 찾기", copy: "벽의 무늬나 나뭇결에서 어떤 모양이 보이나요? 하나를 정해 이름을 지어주고 가만히 바라봅니다." },
+        { category: "색을 보는 실험 · 60초", title: "한 톤의 차이", copy: "비슷해 보이는 색 두 개를 찾아보세요. 둘 중 어느 쪽이 더 따뜻하게 느껴지는지 비교해 봅니다." },
+        { category: "소리를 듣는 실험 · 60초", title: "잠깐의 침묵 뒤", copy: "주변 소리가 잦아드는 순간을 기다려요. 그 다음에 가장 먼저 다시 들려온 소리에 귀를 기울입니다." },
+        { category: "천천히 보기 · 60초", title: "움직이지 않는 움직임", copy: "가만히 있는 사물을 바라보면서, 그 안에서 움직이는 것처럼 느껴지는 부분을 하나 찾아봅니다." },
+        { category: "빛을 보는 실험 · 60초", title: "반짝임의 짧은 경로", copy: "유리나 금속에 비친 작은 반짝임을 찾아요. 고개를 아주 조금 움직이며 빛이 어떻게 달라지는지 봅니다." },
+        { category: "질감을 느끼는 실험 · 60초", title: "따뜻함의 모양", copy: "손을 가까이 대어 따뜻하게 느껴지는 물건을 찾아보세요. 그 온기가 어디서 시작되는지 상상해 봅니다." }
+      ];
+      const $ = (id) => document.getElementById(id);
+      const drawButton = $("draw-button");
+      const doneButton = $("done-button");
+      const copyButton = $("copy-button");
+      const emptyState = $("empty-state");
+      const mission = $("mission");
+      const progress = $("progress");
+      let lastIndex = -1;
+      let completed = 0;
+      let current = null;
+      let toastTimer;
+
+      function announce(message) {
+        const toast = $("toast");
+        toast.textContent = message;
+        toast.classList.add("show");
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(() => toast.classList.remove("show"), 2200);
+      }
+
+      function drawExperiment() {
+        let next = Math.floor(Math.random() * experiments.length);
+        if (experiments.length > 1 && next === lastIndex) next = (next + 1 + Math.floor(Math.random() * (experiments.length - 1))) % experiments.length;
+        lastIndex = next;
+        current = experiments[next];
+        $("mission-category").textContent = current.category;
+        $("mission-title").textContent = current.title;
+        $("mission-copy").textContent = current.copy;
+        $("output-number").textContent = `EXPERIMENT · ${String(next + 1).padStart(2, "0")} / 12`;
+        emptyState.hidden = true;
+        mission.hidden = false;
+        doneButton.hidden = false;
+        copyButton.hidden = false;
+        doneButton.textContent = "관찰했어요 ✓";
+        doneButton.disabled = false;
+        progress.classList.remove("active");
+        requestAnimationFrame(() => progress.classList.add("active"));
+      }
+
+      drawButton.addEventListener("click", drawExperiment);
+      doneButton.addEventListener("click", () => {
+        if (!current || doneButton.disabled) return;
+        completed += 1;
+        doneButton.disabled = true;
+        doneButton.textContent = "오늘의 발견 완료 ✓";
+        $("session-count").textContent = `이 세션에서 ${completed}개의 실험을 마쳤어요`;
+        announce("작은 발견을 마음에 담았어요.");
+      });
+      copyButton.addEventListener("click", async () => {
+        if (!current) return;
+        const text = `${current.title}\n${current.copy}`;
+        try {
+          await navigator.clipboard.writeText(text);
+          announce("미션을 복사했어요.");
+        } catch {
+          const field = document.createElement("textarea");
+          field.value = text;
+          field.setAttribute("readonly", "");
+          field.style.position = "fixed";
+          field.style.opacity = "0";
+          document.body.appendChild(field);
+          field.select();
+          const copied = document.execCommand("copy");
+          field.remove();
+          announce(copied ? "미션을 복사했어요." : "복사할 수 없어요. 미션을 직접 선택해 주세요.");
+        }
+      });
+    })();
+  </script>
+</body>
+</html>
